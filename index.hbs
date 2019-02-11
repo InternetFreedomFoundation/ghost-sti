@@ -1,0 +1,52 @@
+{{!< default}}
+{{!-- The tag above means: insert everything in this file
+into the {body} of the default.hbs template --}}
+
+{{#is "home"}}
+<div class="row no-border no-padding-top">
+    <div class="four columns">
+        <form>
+            <h6>I demand Net Neutrality enforcement!</h6>
+            <div class="row" style="text-align:center">
+                <label for="emailInput" style="text-align:left">Name</label>
+                <input class="u-full-width" type="email" id="emailInput">
+
+                <label for="emailInput" style="text-align:left">Email</label>
+                <input class="u-full-width" type="email" id="emailInput">
+
+                <label for="typeInput" style="text-align:left">You are an</label>
+                <select class="u-full-width" id="typeInput">
+                    <option value="Option 1">Individual</option>
+                    <option value="Option 2">Organization</option>
+                </select>
+
+                {{!-- <label for="emailInput" style="text-align:left">Organization</label>
+                <input class="u-full-width" type="email" id="emailInput"> --}}
+
+                <input class="button" type="submit" value="Take action now">
+                <br />
+
+                <small><a href="#">Read the petition</a> | <a href="#">Privacy Policy</a></small>
+
+            </div>
+
+        </form>
+
+    </div>
+    <div class="eight columns">
+        <h5>#SaveTheInternet again, February 8, 2019</h5>
+        <p>The SaveTheInternet.in movement resulted in a massive public victory for net neutrality in India. This
+            resulted in legal rules which now require internet service providers and telecoms companies to treat all
+            data equally. But these rules are being violated. What is worse, no system exists for their enforcement. So
+            what good is a victory if we cannot enjoy it?</p>
+        <p>By the Take Action Petition we call on people and organisations to support a list of joint demands to the
+            relevant government offices. This will help us protect net neutrality and #SaveTheInternet again. </p>
+
+        <p><a class="button button-brown" href="#">Sign the Take Action petition</a></p>
+        <p>We also call on people to submit reports of any net neutrality violations to us. Based on this data we will
+            take all possible steps including making formal complaints. </p>
+        <p><a class="button" href="#">Report a Net Neutrality violation</a></p>
+
+    </div>
+</div>
+{{/is}}
