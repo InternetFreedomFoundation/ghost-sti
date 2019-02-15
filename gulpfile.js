@@ -66,6 +66,7 @@ gulp.task('js', function () {
 
 gulp.task('watch', function () {
     gulp.watch('assets/css/**/*.css', ['css']);
+    gulp.watch('assets/js/**/*.js', ['js']);
 });
 
 gulp.task('zip', ['css', 'js'], function () {

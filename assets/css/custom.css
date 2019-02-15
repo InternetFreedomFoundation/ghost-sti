@@ -406,3 +406,7 @@ ul.three-col-list > li {
   width: 100%;
   height: auto;
 }
+
+.container {
+  width: 90%;
+}
