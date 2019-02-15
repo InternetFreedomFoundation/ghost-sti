@@ -400,3 +400,9 @@ ul.three-col-list > li {
   text-align: center;
   margin-bottom: 1em;
 }
+
+.kg-image {
+  object-fit: cover;
+  width: 100%;
+  height: auto;
+}
