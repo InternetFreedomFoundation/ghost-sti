@@ -1,88 +1,87 @@
-var gulp = require('gulp');
+const {series, watch, src, dest, parallel} = require('gulp');
+const pump = require('pump');
 
 // gulp plugins and utils
-var gutil = require('gulp-util');
 var livereload = require('gulp-livereload');
 var postcss = require('gulp-postcss');
-var sourcemaps = require('gulp-sourcemaps');
 var zip = require('gulp-zip');
 var uglify = require('gulp-uglify');
-var filter = require('gulp-filter');
+var beeper = require('beeper');
 
 // postcss plugins
 var autoprefixer = require('autoprefixer');
-var colorFunction = require('postcss-color-function');
+var colorFunction = require('postcss-color-mod-function');
 var cssnano = require('cssnano');
-var customProperties = require('postcss-custom-properties');
 var easyimport = require('postcss-easy-import');
 
-var swallowError = function swallowError(error) {
-    gutil.log(error.toString());
-    gutil.beep();
-    this.emit('end');
+function serve(done) {
+    livereload.listen();
+    done();
+}
+
+const handleError = (done) => {
+    return function (err) {
+        if (err) {
+            beeper();
+        }
+        return done(err);
+    };
 };
 
-var nodemonServerInit = function () {
-    livereload.listen(1234);
-};
+function hbs(done) {
+    pump([
+        src(['*.hbs', '**/**/*.hbs', '!node_modules/**/*.hbs']),
+        livereload()
+    ], handleError(done));
+}
 
-gulp.task('build', ['css', 'js'], function (/* cb */) {
-    return nodemonServerInit();
-});
-
-gulp.task('generate', ['css', 'js']);
-
-gulp.task('css', function () {
+function css(done) {
     var processors = [
         easyimport,
-        customProperties,
         colorFunction(),
-        autoprefixer({browsers: ['last 2 versions']}),
+        autoprefixer(),
         cssnano()
     ];
 
-    return gulp.src('assets/css/screen.css')
-        .on('error', swallowError)
-        .pipe(sourcemaps.init())
-        .pipe(postcss(processors))
-        .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest('assets/built/'))
-        .pipe(livereload());
-});
+    pump([
+        src('assets/css/*.css', {sourcemaps: true}),
+        postcss(processors),
+        dest('assets/built/', {sourcemaps: '.'}),
+        livereload()
+    ], handleError(done));
+}
 
-gulp.task('js', function () {
-    var jsFilter = filter(['**/*.js'], {restore: true});
+function js(done) {
+    pump([
+        src('assets/js/*.js', {sourcemaps: true}),
+        uglify(),
+        dest('assets/built/', {sourcemaps: '.'}),
+        livereload()
+    ], handleError(done));
+}
 
-    return gulp.src('assets/js/*.js')
-        .on('error', swallowError)
-        .pipe(sourcemaps.init())
-        .pipe(jsFilter)
-        .pipe(uglify())
-        .pipe(jsFilter.restore)
-        .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest('assets/built/'))
-        .pipe(livereload());
-});
-
-gulp.task('watch', function () {
-    gulp.watch('assets/css/**/*.css', ['css']);
-    gulp.watch('assets/js/**/*.js', ['js']);
-});
-
-gulp.task('zip', ['css', 'js'], function () {
+function zipper(done) {
     var targetDir = 'dist/';
     var themeName = require('./package.json').name;
     var filename = themeName + '.zip';
 
-    return gulp.src([
-        '**',
-        '!node_modules', '!node_modules/**',
-        '!dist', '!dist/**'
-    ])
-        .pipe(zip(filename))
-        .pipe(gulp.dest(targetDir));
-});
+    pump([
+        src([
+            '**',
+            '!node_modules', '!node_modules/**',
+            '!dist', '!dist/**'
+        ]),
+        zip(filename),
+        dest(targetDir)
+    ], handleError(done));
+}
 
-gulp.task('default', ['build'], function () {
-    gulp.start('watch');
-});
+const cssWatcher = () => watch('assets/css/**', css);
+const hbsWatcher = () => watch(['*.hbs', '**/**/*.hbs', '!node_modules/**/*.hbs'], hbs);
+const watcher = parallel(cssWatcher, hbsWatcher);
+const build = series(css, js);
+const dev = series(build, serve, watcher);
+
+exports.build = build;
+exports.zip = series(build, zipper);
+exports.default = dev;
