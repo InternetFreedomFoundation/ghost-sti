@@ -284,7 +284,53 @@
     margin-left: .5rem;
     font-weight: normal; }
   
-  
+  .bsnl-form{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 0.2em 1em;
+    max-width: 450px;
+    background: #fcfcfc;
+    padding: 30px;
+    margin: 50px auto;
+    box-shadow: 1px 1px 25px rgba(0, 0, 0, 0.35);
+    border-radius: 10px;
+    border: 6px solid #a64;
+}
+.bsnl-forminput,
+.bsnl-formtextarea {
+    width: 100%;
+    border: none;
+    padding: 0.4em 0.6em 0.5em;
+    color: #111;
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Open Sans, Helvetica Neue, sans-serif;
+    font-size: 0.95em;
+}
+.bsnl-forminput:focus,
+.bsnl-formtextarea:focus {
+    outline: 1px solid #3eb0ef;
+    outline-offset: -1px;
+}
+.bsnl-formlabel[for="full-name"],
+.bsnl-formlabel[for="email-address"] {
+    order: -1;
+}
+.bsnl-forminput {
+    order: 0;
+    margin-bottom: 0.6em;
+}
+.bsnl-formlabel[for="message"],
+.bsnl-formtextarea {
+    grid-column-end: span 2;
+}
+.bsnl-forminput[type="submit"] {
+    grid-column-start: 2;
+    justify-self: end;
+    margin-top: 0.6em;
+    background: #3eb0ef;
+    color: rgb(215, 215, 215);
+    width: auto;
+}
   /* Lists
   –––––––––––––––––––––––––––––––––––––––––––––––––– */
   ul {
