@@ -22,7 +22,7 @@
     </div>
 
 
-    <form class="bsnl-form" action="https://heimdall.internetfreedom.in/campaigns/sti/bsnl" method="post" id="bsnl-form">
+    <form class="bsnl-form" action="https://api.internetfreedom.in/campaigns/sti/bsnl/send" method="post" id="bsnl-form">
         <label for="full-name">Name</label>
         <br/>
         <input type="text" name="name" id="full-name" placeholder="Name" required>
@@ -30,7 +30,7 @@
         <label for="email-address">Email Address</label>
         <br/>
         <input type="email" name="email" id="email-address" placeholder="Your email address" required>
-        <input type="hidden" name="type" id="email-subject" value="STI">
+        <input type="hidden" name="campaign" id="email-subject" value="saveTheInternet/bsnl">
         <br/>
         <input type="submit" value="Submit">
     </form>
