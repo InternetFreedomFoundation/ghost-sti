@@ -38,17 +38,11 @@ $(function () {
  * @param {FormData} options.formData - `FormData` instance
  * @return {Object} - Response body from URL that was POSTed to
  */
-async function postFormDataAsJson({ url, formData }) {
-    const plainFormData = Object.fromEntries(formData.entries());
-    const formDataJsonString = JSON.stringify(plainFormData);
+async function postFormData({ url, formData }) {
 
     const fetchOptions = {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-        },
-        body: formDataJsonString,
+        body: formData,
     };
 
     const response = await fetch(url, fetchOptions);
@@ -58,7 +52,8 @@ async function postFormDataAsJson({ url, formData }) {
         throw new Error(errorMessage);
     }
 
-    return response.json();
+    const mailUrl = await response.text();
+    return mailUrl;
 }
 
 /**
@@ -76,9 +71,8 @@ async function handleFormSubmit(event) {
 
     try {
         const formData = new FormData(form);
-        await postFormDataAsJson({ url, formData });
-
-        alert("Email Sent! Please check your inbox");
+        encodedEmail= await postFormData({ url, formData });
+        window.open(encodedEmail);
         form.reset();
     } catch (error) {
         alert("Something went wrong, Please try again later");
